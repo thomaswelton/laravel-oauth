@@ -19,6 +19,8 @@ class LaravelOauthServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->package('thomaswelton/laravel-oauth');
+
+		include __DIR__.'/../../routes.php';
 	}
 
 	/**
@@ -28,7 +30,10 @@ class LaravelOauthServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app['oauth'] = $this->app->share(function($app)
+        {
+            return new OAuth;
+        });
 	}
 
 	/**

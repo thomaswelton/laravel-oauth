@@ -9,11 +9,14 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.0.x"
+        "illuminate/support": "4.0.x",
+        "lusitanian/oauth": "~0.1"
     },
     "autoload": {
         "classmap": [
-            "src/migrations"
+            "src/migrations",
+            "src/controllers",
+            "src/Thomaswelton/LaravelOauth/Exceptions.php"
         ],
         "psr-0": {
             "Thomaswelton\\LaravelOauth": "src/"
