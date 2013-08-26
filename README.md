@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/thomaswelton/laravel-oauth.png?branch=master)](https://travis-ci.org/thomaswelton/laravel-oauth)
 [![Latest Stable Version](https://poser.pugx.org/thomaswelton/laravel-oauth/v/stable.png)](https://packagist.org/packages/thomaswelton/laravel-oauth)
 [![Total Downloads](https://poser.pugx.org/thomaswelton/laravel-oauth/downloads.png)](https://packagist.org/packages/thomaswelton/laravel-oauth)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/thomaswelton/laravel-oauth/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 This aplha version is currently under active development and subject to change.
 A demo site is also underconstruction.
