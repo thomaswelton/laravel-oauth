@@ -4,6 +4,7 @@
     "type": "library",
     "keywords": ["OAuth", "laravel", "facebook", "twitter", "google", "github", "instagram", "microsoft", "windows live", "linkedin", "foursquare", "soundcloud", "tumblr", "oauth1", "oauth2"],
     "homepage": "http://laravel-oauth.herokuapp.com/",
+    "license": "MIT",
     "authors": [
         {
             "name": "ThomasWelton",
