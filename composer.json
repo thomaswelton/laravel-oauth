@@ -1,12 +1,21 @@
 {
     "name": "thomaswelton/laravel-oauth",
-    "description": "",
+    "description": "Laravel package for the simplification and integration of many of your users most wanted login providers. Installation is a breeze. Never worry about OAuth again.",
+    "type": "library",
+    "keywords": ["OAuth", "laravel", "facebook", "twitter", "google", "github", "instagram", "microsoft", "windows live", "linkedin", "foursquare", "soundcloud", "tumblr", "oauth1", "oauth2"],
+    "homepage": "http://laravel-oauth.herokuapp.com/",
     "authors": [
         {
             "name": "ThomasWelton",
-            "email": "thomaswelton@me.com"
+            "email": "thomaswelton@me.com",
+            "homepage": "https://github.com/thomaswelton"
         }
     ],
+    "support": {
+        "email": "thomaswelton@me.com",
+        "issues": "https://github.com/thomaswelton/laravel-oauth/issues",
+        "source": "https://github.com/thomaswelton/laravel-oauth"
+    },
     "require": {
         "php": ">=5.3.0",
         "illuminate/support": "4.0.x",
