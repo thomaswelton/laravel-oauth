@@ -30,10 +30,12 @@ class OAuth extends ServiceFactory{
 
 	/**
      * @return \OAuth\Common\Token\TokenInterface
+     * @throws TokenNotFoundException
      */
 	public function token($provider)
 	{
-		return Session::get('oauth_token_' . $provider);
+		$storage = $this->getStorage();
+		return $storage->retrieveAccessToken(ucfirst($provider));
 	}
 
 	/**
@@ -41,7 +43,8 @@ class OAuth extends ServiceFactory{
     */
 	public function hasToken($provider)
 	{
-		return Session::has('oauth_token_' . $provider);
+		$storage = $this->getStorage();
+		return $storage->hasAccessToken(ucfirst($provider));
 	}
 
 	public function getAuthorizationUri($service, $redirect = null, $scope = null)
@@ -201,12 +204,9 @@ class OAuth extends ServiceFactory{
 				}
 			}
 
-			try{
-				$token = $service->requestAccessToken(Input::get('code'));
-				Session::set('oauth_token_' . $provider, $token);
-
-				return $token;
-			}catch(TokenResponseException $e){
+			try {
+				return $service->requestAccessToken(Input::get('code'));
+			} catch (TokenResponseException $e) {
 				throw new Exception($e->getMessage(), 1);
 			}
 		}else{
@@ -221,12 +221,9 @@ class OAuth extends ServiceFactory{
 			$namespace 	= $this->getStorageNamespace($service);
 			$token 		= $this->getStorage()->retrieveAccessToken($namespace);
 
-			try{
-				$token = $service->requestAccessToken( Input::get('oauth_token'), Input::get('oauth_verifier'), $token->getRequestTokenSecret() );
-
-				Session::set('oauth_token_' . $provider, $token);
-				return $token;
-			}catch(TokenResponseException $e){
+			try {
+				return $service->requestAccessToken( Input::get('oauth_token'), Input::get('oauth_verifier'), $token->getRequestTokenSecret() );
+			} catch (TokenResponseException $e) {
 				throw new Exception($e->getMessage(), 1);
 			}
 		}
