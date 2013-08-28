@@ -11,6 +11,16 @@ class OAuthLoginUrl{
 
 		$baseUrl = URL::to("/{$routePrefix}/{$provider}/login");
 		$this->url = new \Purl\Url($baseUrl);
+
+		// Look for a default redirect the config, either for the provider
+		// Or use the global config. Neither of these may actually be set
+		$redirect = Config::get("laravel-oauth::{$provider}.redirect", Config::get('laravel-oauth::redirect'));
+
+		// Set a default redirect
+		// This may get overwritten later by chained calls
+		if(!is_null($redirect)){
+			$this->url->query->set('redirect', $redirect);
+		}
 	}
 
 	public function redirect($redirect)

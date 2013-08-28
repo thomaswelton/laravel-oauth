@@ -16,6 +16,21 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
+	| Default redirect
+	|--------------------------------------------------------------------------
+	|
+	| After successful login where should we redirect the user?
+	| Uncomment the below line to set a default redirect
+	|
+	| You can also add a 'redirect' key to any of the provider
+	| arrays below, to set provider specific redirects after login
+	|
+	*/
+
+	//'redirect' => '',
+
+	/*
+	|--------------------------------------------------------------------------
 	| Facebook
 	|--------------------------------------------------------------------------
 	|
