@@ -5,13 +5,9 @@ use \Input;
 use \Str;
 use \Redis;
 use \URL;
-
-use \Session as LaravelSession;
+use \Session;
 
 use OAuth\ServiceFactory;
-use OAuth\Common\Storage\Redis as OAuthRedis;
-use OAuth\Common\Storage\SymfonySession;
-use Symfony\Component\HttpFoundation\Session\Session;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Http\Exception\TokenResponseException;
 
@@ -28,12 +24,12 @@ class OAuth extends ServiceFactory{
 
 	public function token($provider)
 	{
-		return LaravelSession::get('oauth_token_' . $provider);
+		return Session::get('oauth_token_' . $provider);
 	}
 
 	public function hasToken($provider)
 	{
-		return LaravelSession::has('oauth_token_' . $provider);
+		return Session::has('oauth_token_' . $provider);
 	}
 
 	public function getAuthorizationUri($service, $redirect = null, $scope = null)
@@ -97,17 +93,8 @@ class OAuth extends ServiceFactory{
 
 	public function getStorage()
 	{
-		switch (Config::get('session.driver')) {
-			case 'redis':
-				$redis = Redis::connection();
-				return new OAuthRedis($redis, 'Thomaswelton\LaravelOauth');
-				break;
-
-			default:
-				$session = new Session();
-				return new SymfonySession($session);
-				break;
-		}
+		// LaravelSession implmentsTokenStorageInterface
+		return new Common\Storage\LaravelSession();
 	}
 
 	public function serviceExists($service)
@@ -168,12 +155,12 @@ class OAuth extends ServiceFactory{
 
 	public function setOAuth1State($requestToken, $state)
 	{
-		LaravelSession::put($requestToken . '_state', $state);
+		Session::put($requestToken . '_state', $state);
 	}
 
 	public function getOAuth1State($requestToken)
 	{
-		return LaravelSession::get($requestToken . '_state');
+		return Session::get($requestToken . '_state');
 	}
 
 	public function getStorageNamespace($service)
@@ -204,7 +191,7 @@ class OAuth extends ServiceFactory{
 
 			try{
 				$token = $service->requestAccessToken(Input::get('code'));
-				LaravelSession::set('oauth_token_' . $provider, $token);
+				Session::set('oauth_token_' . $provider, $token);
 
 				return $token;
 			}catch(TokenResponseException $e){
@@ -225,7 +212,7 @@ class OAuth extends ServiceFactory{
 			try{
 				$token = $service->requestAccessToken( Input::get('oauth_token'), Input::get('oauth_verifier'), $token->getRequestTokenSecret() );
 
-				LaravelSession::set('oauth_token_' . $provider, $token);
+				Session::set('oauth_token_' . $provider, $token);
 				return $token;
 			}catch(TokenResponseException $e){
 				throw new Exception($e->getMessage(), 1);
