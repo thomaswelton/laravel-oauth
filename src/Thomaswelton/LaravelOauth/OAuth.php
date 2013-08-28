@@ -13,6 +13,12 @@ use OAuth\Common\Http\Exception\TokenResponseException;
 
 class OAuth extends ServiceFactory{
 
+	/**
+	 * Get an OAuthLoginUrl for a given provider
+	 * @param  string $provider Provider name
+	 * @param  string $redirect url to redirect to after login
+	 * @return OAuthLoginUrl
+	 */
 	public function login($provider, $redirect = null)
 	{
 		$oAuthLoginUrl = new OAuthLoginUrl($provider);
@@ -22,11 +28,17 @@ class OAuth extends ServiceFactory{
 		return $oAuthLoginUrl;
 	}
 
+	/**
+     * @return \OAuth\Common\Token\TokenInterface
+     */
 	public function token($provider)
 	{
 		return Session::get('oauth_token_' . $provider);
 	}
 
+	/**
+    * @return bool
+    */
 	public function hasToken($provider)
 	{
 		return Session::has('oauth_token_' . $provider);
@@ -93,7 +105,7 @@ class OAuth extends ServiceFactory{
 
 	public function getStorage()
 	{
-		// LaravelSession implmentsTokenStorageInterface
+		// LaravelSession implements TokenStorageInterface
 		return new Common\Storage\LaravelSession();
 	}
 
