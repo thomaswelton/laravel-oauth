@@ -103,7 +103,7 @@ return array(
 	'instagram' => array(
 		'key' => '',
 		'secret' => '',
-		'scope' => ''
+		'scope' => 'basic'
 	),
 
 	/*
@@ -121,7 +121,7 @@ return array(
 	'microsoft' => array(
 		'key' => '',
 		'secret' => '',
-		'scope' => ''
+		'scope' => 'wl.basic'
 	),
 
 	/*
