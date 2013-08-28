@@ -17,10 +17,13 @@ use OAuth\Common\Http\Exception\TokenResponseException;
 
 class OAuth extends ServiceFactory{
 
-	public function login($service, $redirect = null)
+	public function login($provider, $redirect = null)
 	{
-		$routePrefix = Config::get('laravel-oauth::route');
-		return URL::to("{$routePrefix}/{$service}/login/?redirect={$redirect}");
+		$oAuthLoginUrl = new OAuthLoginUrl($provider);
+
+		if(!is_null($redirect)) $oAuthLoginUrl->redirect($redirect);
+
+		return $oAuthLoginUrl;
 	}
 
 	public function getAuthorizationUri($service, $redirect = null, $scope = null)
