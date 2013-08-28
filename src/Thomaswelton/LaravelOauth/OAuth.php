@@ -26,6 +26,16 @@ class OAuth extends ServiceFactory{
 		return $oAuthLoginUrl;
 	}
 
+	public function token($provider)
+	{
+		return LaravelSession::get('oauth_token_' . $provider);
+	}
+
+	public function hasToken($provider)
+	{
+		return LaravelSession::has('oauth_token_' . $provider);
+	}
+
 	public function getAuthorizationUri($service, $redirect = null, $scope = null)
 	{
 		$factory = $this->getServiceFactory($service, $scope);
@@ -193,7 +203,10 @@ class OAuth extends ServiceFactory{
 			}
 
 			try{
-				return $service->requestAccessToken(Input::get('code'));
+				$token = $service->requestAccessToken(Input::get('code'));
+				LaravelSession::set('oauth_token_' . $provider, $token);
+
+				return $token;
 			}catch(TokenResponseException $e){
 				throw new Exception($e->getMessage(), 1);
 			}
@@ -210,7 +223,10 @@ class OAuth extends ServiceFactory{
 			$token 		= $this->getStorage()->retrieveAccessToken($namespace);
 
 			try{
-				return $service->requestAccessToken( Input::get('oauth_token'), Input::get('oauth_verifier'), $token->getRequestTokenSecret() );
+				$token = $service->requestAccessToken( Input::get('oauth_token'), Input::get('oauth_verifier'), $token->getRequestTokenSecret() );
+
+				LaravelSession::set('oauth_token_' . $provider, $token);
+				return $token;
 			}catch(TokenResponseException $e){
 				throw new Exception($e->getMessage(), 1);
 			}

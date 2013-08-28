@@ -18,7 +18,7 @@ class OAuthController extends Controller {
 	    $redirect = $oauth->getRedirectFromState($provider);
 
 	    try{
-	    	$access_token = $oauth->requestAccessToken($provider);
+	    	$oauth->requestAccessToken($provider);
 	    }catch(ServiceNotSupportedException $e){
 	    	$errors = new MessageBag(
 	    		array("oauth_error" => 'Unknown OAuth Error')
@@ -36,7 +36,7 @@ class OAuthController extends Controller {
 	    	return Redirect::to($redirect)->withErrors($errors);
 	    }
 
-	    return Redirect::to($redirect)->with('oauth_token_' . $provider, $access_token);
+	    return Redirect::to($redirect);
 	}
 
 	public function login($provider){
