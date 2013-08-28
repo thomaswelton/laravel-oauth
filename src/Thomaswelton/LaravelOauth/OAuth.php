@@ -23,9 +23,9 @@ class OAuth extends ServiceFactory{
 		return URL::to("{$routePrefix}/{$service}/login/?redirect={$redirect}");
 	}
 
-	public function getAuthorizationUri($service, $redirect = null)
+	public function getAuthorizationUri($service, $redirect = null, $scope = null)
 	{
-		$factory = $this->getServiceFactory($service);
+		$factory = $this->getServiceFactory($service, $scope);
 
 		$state = $this->encodeState(array(
 			'redirect' => $redirect
@@ -49,14 +49,14 @@ class OAuth extends ServiceFactory{
 		return htmlspecialchars_decode($authUrl);
 	}
 
-	public function getServiceFactory($service)
+	public function getServiceFactory($service, $scope = null)
 	{
 		if(!$this->serviceExists($service)){
 			throw  new ServiceNotSupportedException( Str::studly($service) . ' is not a supported OAuth1 or OAuth2 service provider');
 		}
 
 		$credentials = $this->getCredentials($service);
-		$scopes 	 = array_values( $this->getScopes($service) );
+		$scopes 	 = (!is_null($scope)) ? array_map("trim", explode(',', $scope)) : array_values( $this->getScopes($service) );
 
 		$storage 	 = $this->getStorage();
 

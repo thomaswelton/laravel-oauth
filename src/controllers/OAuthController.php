@@ -42,7 +42,9 @@ class OAuthController extends Controller {
 	public function login($provider){
 		$oauth = App::make('oauth');
 		$redirect = Input::get('redirect');
-		$authUrl = $oauth->getAuthorizationUri($provider, $redirect);
+		$scope = Input::get('scope');
+
+		$authUrl = $oauth->getAuthorizationUri($provider, $redirect, $scope);
 
 		return Redirect::to(htmlspecialchars_decode($authUrl));
 	}
