@@ -46,6 +46,15 @@ class OAuth extends ServiceFactory{
 		return $service->getStorage()->hasAccessToken($serviceName);
 	}
 
+	public function user($provider){
+		$serviceName = ucfirst($provider);
+		$className = "Thomaswelton\\LaravelOauth\\Common\\User\\$serviceName";
+
+		$service = $this->getServiceFactory($provider);
+
+		return new $className($service);
+	}
+
 	public function getAuthorizationUri($service, $redirect = null, $scope = null)
 	{
 		$factory = $this->getServiceFactory($service, $scope);
