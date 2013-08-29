@@ -34,17 +34,16 @@ class OAuth extends ServiceFactory{
      */
 	public function token($provider)
 	{
-		$storage = $this->getStorage();
-		return $storage->retrieveAccessToken(ucfirst($provider));
+		$service = $this->getServiceFactory($provider);
+		$serviceName = $service->service();
+		return $service->getStorage()->retrieveAccessToken($serviceName);
 	}
 
-	/**
-    * @return bool
-    */
 	public function hasToken($provider)
 	{
-		$storage = $this->getStorage();
-		return $storage->hasAccessToken(ucfirst($provider));
+		$service = $this->getServiceFactory($provider);
+		$serviceName = $service->service();
+		return $service->getStorage()->hasAccessToken($serviceName);
 	}
 
 	public function getAuthorizationUri($service, $redirect = null, $scope = null)
