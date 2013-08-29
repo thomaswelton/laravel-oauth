@@ -24,12 +24,23 @@ class OAuth extends ServiceFactory{
 
 	public function token($provider)
 	{
-		return Session::get('oauth_token_' . $provider);
+		$storage = $this->getStorage();
+		return $storage->retrieveAccessToken(ucfirst($provider));
 	}
 
 	public function hasToken($provider)
 	{
-		return Session::has('oauth_token_' . $provider);
+		$storage = $this->getStorage();
+		return $storage->hasAccessToken(ucfirst($provider));
+	}
+
+	public function user($provider){
+		$serviceName = ucfirst($provider);
+		$className = "Thomaswelton\\LaravelOauth\\Common\\User\\$serviceName";
+
+		$service = $this->getServiceFactory($provider);
+
+		return new $className($service);
 	}
 
 	public function getAuthorizationUri($service, $redirect = null, $scope = null)
