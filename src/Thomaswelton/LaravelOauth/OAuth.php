@@ -47,7 +47,8 @@ class OAuth extends ServiceFactory{
 	}
 
 	public function user($provider){
-		$serviceName = ucfirst($provider);
+		$service = $this->getServiceFactory($provider);
+		$serviceName = $service->service();
 		$className = "Thomaswelton\\LaravelOauth\\Common\\User\\$serviceName";
 
 		$service = $this->getServiceFactory($provider);
