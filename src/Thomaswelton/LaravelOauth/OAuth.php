@@ -3,7 +3,6 @@
 use \Config;
 use \Input;
 use \Str;
-use \Redis;
 use \URL;
 use \Session;
 
@@ -15,8 +14,8 @@ class OAuth extends ServiceFactory
 {
     /**
      * Get an OAuthLoginUrl for a given provider
-     * @param  string $provider Provider name
-     * @param  string $redirect url to redirect to after login
+     * @param  string        $provider Provider name
+     * @param  string        $redirect url to redirect to after login
      * @return OAuthLoginUrl
      */
     public function login($provider, $redirect = null)
@@ -36,6 +35,7 @@ class OAuth extends ServiceFactory
     {
         $service = $this->getServiceFactory($provider);
         $serviceName = $service->service();
+
         return $service->getStorage()->retrieveAccessToken($serviceName);
     }
 
@@ -43,6 +43,7 @@ class OAuth extends ServiceFactory
     {
         $service = $this->getServiceFactory($provider);
         $serviceName = $service->service();
+
         return $service->getStorage()->hasAccessToken($serviceName);
     }
 
@@ -65,9 +66,9 @@ class OAuth extends ServiceFactory
             'redirect' => $redirect
         ));
 
-        if($this->isOAuth2($service)){
+        if ($this->isOAuth2($service)) {
             $authUriArray = array('state' => $state);
-        }else{
+        } else {
             $token = $factory->requestRequestToken();
             $requestToken = $token->getRequestToken();
 
@@ -85,7 +86,7 @@ class OAuth extends ServiceFactory
 
     public function getServiceFactory($service, $scope = null)
     {
-        if(!$this->serviceExists($service)){
+        if (!$this->serviceExists($service)) {
             throw  new ServiceNotSupportedException( Str::studly($service) . ' is not a supported OAuth1 or OAuth2 service provider');
         }
 
@@ -94,9 +95,9 @@ class OAuth extends ServiceFactory
 
         $storage 	 = $this->getStorage();
 
-        if($this->isOAuth2($service)){
+        if ($this->isOAuth2($service)) {
             return $this->createService($service, $credentials, $storage, $scopes);
-        }else{
+        } else {
             return $this->createService($service, $credentials, $storage);
         }
     }
@@ -113,6 +114,7 @@ class OAuth extends ServiceFactory
     public function getScopes($service)
     {
         $array = explode(',', Config::get("laravel-oauth::{$service}.scope"));
+
         return array_map("trim", $array);
     }
 
@@ -157,10 +159,10 @@ class OAuth extends ServiceFactory
     {
         $decodedState = null;
 
-        if($this->isOAuth2($provider)){
+        if ($this->isOAuth2($provider)) {
             $state = Input::get('state');
             $decodedState = (object) $this->decodeState($state);
-        }else{
+        } else {
             $service = $this->getServiceFactory($provider);
 
             $namespace 	= $this->getStorageNamespace($service);
@@ -173,7 +175,7 @@ class OAuth extends ServiceFactory
             $decodedState = $this->decodeState($state);
         }
 
-        if(property_exists($decodedState, 'redirect')){
+        if (property_exists($decodedState, 'redirect')) {
             return $decodedState->redirect;
         }
     }
@@ -192,6 +194,7 @@ class OAuth extends ServiceFactory
     {
         // get class name without backslashes
         $classname = get_class($service);
+
         return preg_replace('/^.*\\\\/', '', $classname);
     }
 
@@ -199,17 +202,17 @@ class OAuth extends ServiceFactory
     {
         $service = $this->getServiceFactory($provider);
 
-        if($this->isOAuth2($provider)){
+        if ($this->isOAuth2($provider)) {
             // error required by OAuth 2.0 error_description optional
             $error = Input::get('error');
 
-            if($error){
+            if ($error) {
                 $errorDescription = Input::get('error_description');
                 $errorMessage = ($errorDescription) ? $errorDescription : $error;
 
-                if($error == 'access_denied'){
+                if ($error == 'access_denied') {
                     throw new UserDeniedException($errorMessage, 1);
-                }else{
+                } else {
                     throw new Exception($errorMessage, 1);
                 }
             }
@@ -219,12 +222,12 @@ class OAuth extends ServiceFactory
             } catch (TokenResponseException $e) {
                 throw new Exception($e->getMessage(), 1);
             }
-        }else{
-            if(Input::get('denied') || Input::get('oauth_token') == 'denied'){
+        } else {
+            if (Input::get('denied') || Input::get('oauth_token') == 'denied') {
                 throw new UserDeniedException('User Denied OAuth Permissions', 1);
             }
 
-            if(!Input::get('oauth_token')){
+            if (!Input::get('oauth_token')) {
                 throw new Exception("OAuth token not found", 1);
             }
 

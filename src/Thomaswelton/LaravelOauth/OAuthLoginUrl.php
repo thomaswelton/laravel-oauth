@@ -15,7 +15,7 @@ class OAuthLoginUrl
 
         $this->url->set('path', "{$routePrefix}/{$provider}/login");
 
-        if(in_array($provider, $this->requiesHTTPS)){
+        if (in_array($provider, $this->requiesHTTPS)) {
             $this->url->set('scheme', 'https');
         }
 
@@ -25,7 +25,7 @@ class OAuthLoginUrl
 
         // Set a default redirect
         // This may get overwritten later by chained calls
-        if(!is_null($redirect)){
+        if (!is_null($redirect)) {
             $this->url->query->set('redirect', $redirect);
         }
     }
@@ -33,6 +33,7 @@ class OAuthLoginUrl
     public function redirect($redirect)
     {
         $this->url->query->set('redirect', $redirect);
+
         return $this;
     }
 
@@ -41,6 +42,7 @@ class OAuthLoginUrl
         $scope = implode(',', func_get_args());
 
         $this->url->query->set('scope', $scope);
+
         return $this;
     }
 

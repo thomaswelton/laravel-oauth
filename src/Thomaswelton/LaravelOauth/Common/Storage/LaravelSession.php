@@ -4,7 +4,6 @@ use \Session;
 use OAuth\Common\Token\TokenInterface;
 use OAuth\Common\Storage\TokenStorageInterface;
 use OAuth\Common\Storage\Exception\TokenNotFoundException;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class LaravelSession implements TokenStorageInterface
 {
