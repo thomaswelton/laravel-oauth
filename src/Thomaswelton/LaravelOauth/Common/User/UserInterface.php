@@ -6,13 +6,7 @@ interface UserInterface {
 
 	function __construct(ServiceInterface $service);
 
-	public function getUniqueIdentifier();
-
+	public function getUID();
 	public function getUser();
-
-	public function decodeResponse($response);
-
-	// Return the "user" portion of an API response
-	public function getUserResponse($response);
 
 }

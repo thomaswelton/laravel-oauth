@@ -6,10 +6,4 @@ class SoundCloud extends AbstractUser {
 
 	protected $userEndpoint = '/me?format=json';
 
-	public function getUniqueIdentifier()
-	{
-		$user = $this->getUser();
-		return $user->id;
-	}
-
 }

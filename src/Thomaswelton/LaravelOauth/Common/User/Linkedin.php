@@ -6,7 +6,7 @@ class Linkedin extends AbstractUser{
 
 	protected $userEndpoint = 'people/~?format=json';
 
-	public function getUniqueIdentifier()
+	public function getUID()
 	{
 		$user = $this->getUser();
 		// The user ID is part fo the profile query string

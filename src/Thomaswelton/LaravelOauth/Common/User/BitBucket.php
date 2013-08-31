@@ -6,13 +6,12 @@ class BitBucket extends AbstractUser{
 
 	protected $userEndpoint = 'user';
 
-	public function getUserResponse($response){
-		$decodedResponse = $this->decodeResponse($response);
-		return $decodedResponse->user;
+	protected function getUserResponse($response){
+		return $response->user;
 	}
 
 	// Doesn't return a user ID and can change username
-	public function getUniqueIdentifier()
+	public function getUID()
 	{
 		return null;
 	}

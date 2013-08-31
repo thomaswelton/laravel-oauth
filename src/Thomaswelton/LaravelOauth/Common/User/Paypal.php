@@ -5,11 +5,6 @@ use OAuth\Common\Service\ServiceInterface;
 class Paypal extends AbstractUser{
 
 	protected $userEndpoint = '/identity/openidconnect/userinfo/?schema=openid';
-
-	public function getUniqueIdentifier()
-	{
-		$user = $this->getUser();
-		return $user->user_id;
-	}
+	protected $uidKey = 'user_id';
 
 }

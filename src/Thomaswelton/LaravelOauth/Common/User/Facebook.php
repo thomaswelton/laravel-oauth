@@ -4,6 +4,6 @@ use OAuth\Common\Service\ServiceInterface;
 
 class Facebook extends AbstractUser{
 
-	protected $userEndpoint = 'me';
+	protected $userEndpoint = 'me?fields=id';
 
 }

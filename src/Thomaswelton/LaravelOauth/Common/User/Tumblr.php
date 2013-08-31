@@ -5,16 +5,10 @@ use OAuth\Common\Service\ServiceInterface;
 class Tumblr extends AbstractUser{
 
 	protected $userEndpoint = 'user/info';
+	protected $uidKey = 'name';
 
-	public function getUniqueIdentifier()
-	{
-		$user = $this->getUser();
-		return $user->name;
-	}
-
-	public function getUserResponse($response){
-		$decodedResponse = $this->decodeResponse($response);
-		return $decodedResponse->response->user;
+	protected function getUserResponse($response){
+		return $response->response->user;
 	}
 
 }

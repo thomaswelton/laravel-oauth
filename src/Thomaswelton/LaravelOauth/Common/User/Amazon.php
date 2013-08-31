@@ -5,11 +5,6 @@ use OAuth\Common\Service\ServiceInterface;
 class Amazon extends AbstractUser{
 
 	protected $userEndpoint = 'user/profile';
-
-	public function getUniqueIdentifier()
-	{
-		$user = $this->getUser();
-		return $user->user_id;
-	}
+	protected $uidKey = 'user_id';
 
 }
