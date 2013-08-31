@@ -22,7 +22,7 @@ class OAuthController extends Controller
                 array("oauth_error" => 'Unknown OAuth Error')
             );
 
-            return Redirect::to('/')->withErrors($errors);
+            return Redirect::to($redirect)->withErrors($errors);
         } catch (UserDeniedException $e) {
             $errors = new MessageBag(
                 array("oauth_error_{$provider}" => 'User Denied')
