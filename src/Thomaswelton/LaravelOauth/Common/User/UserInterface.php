@@ -2,11 +2,11 @@
 
 use OAuth\Common\Service\ServiceInterface;
 
-interface UserInterface {
+interface UserInterface
+{
+    public function __construct(ServiceInterface $service);
 
-	function __construct(ServiceInterface $service);
-
-	public function getUID();
-	public function getUser();
+    public function getUID();
+    public function getUser();
 
 }
