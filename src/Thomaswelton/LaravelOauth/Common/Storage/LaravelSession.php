@@ -14,8 +14,7 @@ class LaravelSession implements TokenStorageInterface
     {
         $this->sessionVariableName = $sessionVariableName;
 
-        if (!Session::has($sessionVariableName))
-        {
+        if (!Session::has($sessionVariableName)) {
             Session::set($sessionVariableName, array());
         }
     }
@@ -42,13 +41,10 @@ class LaravelSession implements TokenStorageInterface
         // get previously saved tokens
         $tokens = Session::get($this->sessionVariableName);
 
-        if (is_array($tokens))
-        {
+        if (is_array($tokens)) {
             // add to array
             $tokens[$service] = $token;
-        }
-        else
-        {
+        } else {
             // new array
             $tokens = array(
                 $service => $token,
