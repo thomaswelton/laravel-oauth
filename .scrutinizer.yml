@@ -1,0 +1,23 @@
+filter:
+    excluded_paths: [vendor/*]
+
+tools:
+    php_mess_detector: true
+    php_cpd: true
+    php_pdepend:
+        excluded_dirs: [vendor]
+
+    php_analyzer: true
+
+    # Runs the PHP CS Fixer (http://http://cs.sensiolabs.org/).
+    php_cs_fixer:
+        extensions:
+            - php
+        command:              php-cs-fixer
+        enabled:              true
+        filter:
+            paths:                []
+            excluded_paths:       []
+        config:
+            level:                psr2
+            fixers:               []
