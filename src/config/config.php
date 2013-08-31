@@ -31,6 +31,87 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
+	| Amazon
+	|--------------------------------------------------------------------------
+	|
+	| Create a new app - http://login.amazon.com/manageApps
+	|
+	| Requires HTTPS support.
+	|
+	| Key - Amazon calls this the App ID
+	| Secret - Amazon calls this the Client Secret
+	| Scope - Comma seperated string
+	|
+	*/
+	'amazon' => array(
+		'key' => '',
+		'secret' => '',
+		'scope' => ''
+	),
+
+	/*
+	|--------------------------------------------------------------------------
+	| Dropbox
+	|--------------------------------------------------------------------------
+	|
+	| Create a new app - https://www.dropbox.com/developers/apps/create
+	|
+	| Requires HTTPS support.
+	|
+	| Key - Dropbox calls this the App key
+	| Secret - Dropbox calls this the App Secret
+	| Scope - Comma seperated string
+	|
+	*/
+	'dropbox' => array(
+		'key' => '',
+		'secret' => '',
+		'scope' => ''
+	),
+
+	/*
+	|--------------------------------------------------------------------------
+	| Bitbucket
+	|--------------------------------------------------------------------------
+	|
+	| Create a new app, "account" -> "integrated applications" ->  "Add consumer"
+	| https://bitbucket.org/account/user/YOUR_USERNAME/api
+	|
+	| Requires HTTPS support.
+	|
+	| Key - Bitbucket calls this the App key
+	| Secret - Bitbucket calls this the App Secret
+	| Scope - Comma seperated string
+	|
+	*/
+	'bitbucket' => array(
+		'key' => '',
+		'secret' => '',
+		'scope' => ''
+	),
+
+	/*
+	|--------------------------------------------------------------------------
+	| Paypal
+	|--------------------------------------------------------------------------
+	|
+	| Create a new app - https://developer.paypal.com/webapps/developer/applications/myapps
+	|
+	| Enable "login with paypal" and request both Basic auth and personal information
+	|
+	| Key - Paypal calls this the Client ID
+	| Secret - Paypal calls this the Secret
+	| Scope - Comma seperated string
+	|
+	*/
+	'paypal' => array(
+		'key' => '',
+		'secret' => '',
+		'scope' => 'profile, openid'
+	),
+
+	/*
+	|--------------------------------------------------------------------------
 	| Facebook
 	|--------------------------------------------------------------------------
 	|
