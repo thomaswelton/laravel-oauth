@@ -5,12 +5,19 @@ use \URL;
 
 class OAuthLoginUrl{
 
+	private $requiesHTTPS = array('amazon', 'box', 'dropbox');
+
 	function __construct($provider)
 	{
 		$routePrefix = Config::get('laravel-oauth::route');
 
-		$baseUrl = URL::to("/{$routePrefix}/{$provider}/login");
-		$this->url = new \Purl\Url($baseUrl);
+		$this->url = new \Purl\Url(URL::to('/'));
+
+		$this->url->set('path', "{$routePrefix}/{$provider}/login");
+
+		if(in_array($provider, $this->requiesHTTPS)){
+			$this->url->set('scheme', 'https');
+		}
 
 		// Look for a default redirect the config, either for the provider
 		// Or use the global config. Neither of these may actually be set
