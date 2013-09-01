@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Routing\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Thomaswelton\LaravelOauth\OAuthUser;
 
@@ -29,13 +30,17 @@ class OAuthController extends Controller
 
             if (property_exists($state, 'login')) {
                 $uid = $this->oauth->user($provider)->getUID();
-                $user_id = OAuthUser::where($provider . '_uid', '=', $uid)->first()->user_id;
 
-                Auth::loginUsingId($user_id);
+                $user = OAuthUser::where($provider . '_uid', '=', $uid)->firstOrFail();
+                Auth::loginUsingId($user->user_id);
             }
 
             return Redirect::to($redirect);
 
+        } catch (ModelNotFoundException $e){
+            $errors = new MessageBag(
+                array("oauth_error" => 'Login Failed: No User found')
+            );
         } catch (ServiceNotSupportedException $e) {
             $errors = new MessageBag(
                 array("oauth_error" => 'Unknown OAuth Error')
