@@ -28,6 +28,10 @@ class OAuth extends ServiceFactory
         return $this->authorize($provider)->login();
     }
 
+    public function associate($provider){
+        return $this->authorize($provider)->associate();
+    }
+
     /**
      * @return \OAuth\Common\Token\TokenInterface
      * @throws TokenNotFoundException

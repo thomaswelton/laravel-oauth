@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Routing\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-use Thomaswelton\LaravelOauth\OAuthUser;
 
 class OAuthController extends Controller
 {
@@ -31,12 +30,43 @@ class OAuthController extends Controller
             if (property_exists($state, 'login')) {
                 $uid = $this->oauth->user($provider)->getUID();
 
-                $user = OAuthUser::where($provider . '_uid', '=', $uid)->firstOrFail();
+                $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\".ucfirst($provider);
+                $model = new $modelName();
+
+                $user = $model->where('oauth_uid', '=', $uid)->firstOrFail();
                 Auth::loginUsingId($user->user_id);
+            }
+
+            if (property_exists($state, 'associate')) {
+                if (Auth::check()){
+                    $uid = $this->oauth->user($provider)->getUID();
+
+                    $providerClass = ucfirst($provider);
+
+                    $user = Auth::user();
+
+                    // Check for an existing relation
+                    if(is_object($user->$providerClass)){
+                        $model = $user->$providerClass;
+                    }else{
+                        $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\".$providerClass;
+                        $model = new $modelName();
+                    }
+
+                    $model->oauth_uid = $uid;
+
+                    $user->$provider()->save($model);
+                }else{
+                    throw new NotLoggedInException("NOT_LOGGED_IN", 1);
+                }
             }
 
             return Redirect::to($redirect);
 
+        } catch (NotLoggedInException $e){
+            $errors = new MessageBag(
+                array("oauth_error" => 'User linking failed. Not logged in')
+            );
         } catch (ModelNotFoundException $e){
             $errors = new MessageBag(
                 array("oauth_error" => 'Login Failed: No User found')
@@ -64,12 +94,31 @@ class OAuthController extends Controller
 
         $state = array(
             'redirect' => Input::get('redirect'),
-            'login' => Input::get('login')
+            'login' => Input::get('login'),
+            'associate' => Input::get('associate')
         );
 
         $authUrl = $this->oauth->getAuthorizationUri($provider, $scope, $state);
 
         return Redirect::to(htmlspecialchars_decode($authUrl));
+    }
+
+    public function destroy($provider)
+    {
+        $redirect = Input::get('redirect');
+
+        if (Auth::check()){
+            $user = Auth::user();
+            $user->$provider()->delete();
+        }else{
+            $errors = new MessageBag(
+                array("oauth_error" => 'User unlink failed. User not logged in')
+            );
+
+            return Redirect::to($redirect)->with('errors', $errors);
+        }
+
+        return Redirect::to($redirect);
     }
 
 }

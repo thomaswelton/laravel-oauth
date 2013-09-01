@@ -9,15 +9,14 @@ class OAuthLoginUrl
 
     public function __construct($provider)
     {
-        $routePrefix = Config::get('laravel-oauth::route');
-
+        $this->provider = $provider;
         $this->url = new \Purl\Url(URL::to('/'));
-
-        $this->url->set('path', "{$routePrefix}/{$provider}/authorize");
 
         if (in_array($provider, $this->requiesHTTPS)) {
             $this->url->set('scheme', 'https');
         }
+
+        $this->setPath('authorize');
 
         // Look for a default redirect the config, either for the provider
         // Or use the global config. Neither of these may actually be set
@@ -28,6 +27,12 @@ class OAuthLoginUrl
         if (!is_null($redirect)) {
             $this->url->query->set('redirect', $redirect);
         }
+    }
+
+    private function setPath($pathPart)
+    {
+        $routePrefix = Config::get('laravel-oauth::route');
+        $this->url->set('path', "{$routePrefix}/{$this->provider}/{$pathPart}");
     }
 
     public function redirect($redirect)
@@ -50,6 +55,15 @@ class OAuthLoginUrl
     {
         if ($login) {
             $this->url->query->set('login', true);
+        }
+
+        return $this;
+    }
+
+    public function associate($associate = true)
+    {
+        if ($associate) {
+            $this->url->query->set('associate', true);
         }
 
         return $this;

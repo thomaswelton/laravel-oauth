@@ -1,11 +1,9 @@
-<?php namespace Thomaswelton\LaravelOauth;
+<?php namespace Thomaswelton\LaravelOauth\Eloquent;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class OAuthUser extends Eloquent
+class AbstractModel extends Eloquent
 {
-    protected $table = 'oauth_users';
-
     public function user()
     {
         return $this->belongsTo('User');
