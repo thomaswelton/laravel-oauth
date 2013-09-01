@@ -13,7 +13,7 @@ class OAuthLoginUrl
 
         $this->url = new \Purl\Url(URL::to('/'));
 
-        $this->url->set('path', "{$routePrefix}/{$provider}/login");
+        $this->url->set('path', "{$routePrefix}/{$provider}/authorize");
 
         if (in_array($provider, $this->requiesHTTPS)) {
             $this->url->set('scheme', 'https');
@@ -42,6 +42,15 @@ class OAuthLoginUrl
         $scope = implode(',', func_get_args());
 
         $this->url->query->set('scope', $scope);
+
+        return $this;
+    }
+
+    public function login($login = true)
+    {
+        if ($login) {
+            $this->url->query->set('login', true);
+        }
 
         return $this;
     }

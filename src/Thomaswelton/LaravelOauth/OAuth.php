@@ -18,13 +18,14 @@ class OAuth extends ServiceFactory
      * @param  string        $redirect url to redirect to after login
      * @return OAuthLoginUrl
      */
-    public function login($provider, $redirect = null)
+    public function authorize($provider)
     {
-        $oAuthLoginUrl = new OAuthLoginUrl($provider);
+        return new OAuthLoginUrl($provider);
+    }
 
-        if(!is_null($redirect)) $oAuthLoginUrl->redirect($redirect);
-
-        return $oAuthLoginUrl;
+    public function login($provider)
+    {
+        return $this->authorize($provider)->login();
     }
 
     /**
@@ -58,23 +59,21 @@ class OAuth extends ServiceFactory
         return new $className($service);
     }
 
-    public function getAuthorizationUri($service, $redirect = null, $scope = null)
+    public function getAuthorizationUri($service, $scope, array $state = array())
     {
         $factory = $this->getServiceFactory($service, $scope);
 
-        $state = $this->encodeState(array(
-            'redirect' => $redirect
-        ));
+        $encodedState = $this->encodeState($state);
 
         if ($this->isOAuth2($service)) {
-            $authUriArray = array('state' => $state);
+            $authUriArray = array('state' => $encodedState);
         } else {
             $token = $factory->requestRequestToken();
             $requestToken = $token->getRequestToken();
 
             // No state in OAuth 1.0
             // Handles custom redirects by setting the redirect in a session
-            $this->setOAuth1State($token->getRequestToken(), $state);
+            $this->setOAuth1State($token->getRequestToken(), $encodedState);
 
             $authUriArray = array( 'oauth_token' => $requestToken);
         }
@@ -147,6 +146,11 @@ class OAuth extends ServiceFactory
 
     public function encodeState($state)
     {
+        // remove all keys with empty values
+        $state = array_filter($state, function($var){
+            return (!is_null($var));
+        });
+
         return base64_encode(json_encode($state));
     }
 
@@ -155,29 +159,20 @@ class OAuth extends ServiceFactory
         return json_decode(base64_decode($state));
     }
 
-    public function getRedirectFromState($provider)
+    public function getState($provider)
     {
-        $decodedState = null;
-
         if ($this->isOAuth2($provider)) {
             $state = Input::get('state');
-            $decodedState = (object) $this->decodeState($state);
         } else {
             $service = $this->getServiceFactory($provider);
 
-            $namespace 	= $this->getStorageNamespace($service);
-            $token 		= $this->getStorage()->retrieveAccessToken($namespace);
-
-            $requestToken = $token->getRequestToken();
+            $namespace  = $this->getStorageNamespace($service);
+            $token      = $this->getStorage()->retrieveAccessToken($namespace);
 
             $state = $this->getOAuth1State($token->getRequestToken());
-
-            $decodedState = $this->decodeState($state);
         }
 
-        if (property_exists($decodedState, 'redirect')) {
-            return $decodedState->redirect;
-        }
+        return (object) $this->decodeState($state);
     }
 
     public function setOAuth1State($requestToken, $state)
