@@ -38,3 +38,11 @@ Copy the config file into your project by running
 ```
 php artisan config:publish thomaswelton/laravel-oauth
 ```
+
+## Migrations
+
+Optionally if using OAuth for user login you'll need to run the migration
+
+```
+php artisan migrate --package="thomaswelton/laravel-oauth"
+```
