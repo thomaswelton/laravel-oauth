@@ -15,6 +15,8 @@ class MigrationOauthGithub extends Migration {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->unique();
             $table->text('oauth_uid');
+            $table->text('access_token');
+            $table->integer('expire_time');
 
             $table->timestamps();
 

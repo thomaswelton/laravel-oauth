@@ -25,7 +25,7 @@ class OAuthController extends Controller
         $redirect = (property_exists($state, 'redirect')) ? $state->redirect : null;
 
         try {
-            $this->oauth->requestAccessToken($provider);
+            $token = $this->oauth->requestAccessToken($provider);
 
             if (property_exists($state, 'login')) {
                 $uid = $this->oauth->user($provider)->getUID();
@@ -54,6 +54,8 @@ class OAuthController extends Controller
                     }
 
                     $model->oauth_uid = $uid;
+                    $model->access_token = $token->getAccessToken();
+                    $model->expire_time = $token->getEndOfLife();
 
                     $user->$provider()->save($model);
                 }else{
