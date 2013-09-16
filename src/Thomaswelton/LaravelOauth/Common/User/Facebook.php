@@ -2,6 +2,6 @@
 
 class Facebook extends AbstractUser
 {
-    protected $userEndpoint = 'me?fields=id';
+    protected $userEndpoint = 'me?fields=id,name,email';
 
 }
