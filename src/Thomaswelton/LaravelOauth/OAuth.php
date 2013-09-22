@@ -63,6 +63,10 @@ class OAuth extends ServiceFactory
         return new $className($service);
     }
 
+    public function consumer($provider){
+        return $this->getServiceFactory($provider);
+    }
+
     public function getAuthorizationUri($service, $scope, array $state = array())
     {
         $factory = $this->getServiceFactory($service, $scope);
