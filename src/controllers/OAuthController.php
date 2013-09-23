@@ -3,6 +3,7 @@
 use \Config;
 use \URL;
 use \Auth;
+use \Route;
 
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\App;
@@ -15,6 +16,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class OAuthController extends Controller
 {
     public function __construct(){
+        $action = Route::currentRouteAction();
+        $method = explode('@', $action)[1];
+
+        if($method == 'authorize' || $method == 'destroy'){
+            $this->beforeFilter('csrf');
+        }
+
         $this->oauth = App::make('oauth');
     }
 

@@ -27,6 +27,8 @@ class OAuthLoginUrl
         if (!is_null($redirect)) {
             $this->url->query->set('redirect', $redirect);
         }
+
+        $this->url->query->set('_token', csrf_token());
     }
 
     private function setPath($pathPart)
