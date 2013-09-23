@@ -3,16 +3,6 @@
 [![Total Downloads](https://poser.pugx.org/thomaswelton/laravel-oauth/downloads.png)](https://packagist.org/packages/thomaswelton/laravel-oauth)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/thomaswelton/laravel-oauth/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
-This aplha version is currently under active development and subject to change.
-A demo site is also underconstruction. And can be view here http://laravel-oauth.herokuapp.com/ it is currently a free app on Heroku, this means that the server may sleep if left unactive. It will wake up again the next time it's viewed but start up may take a few seconds. This package is not the cause of the slow response time :smile:
-
-Feel free to install this project for testing purposes. But it is not recomeneded as the foundation to build new projects on... yet.
-I'm hoping to get all this wrapped up soon. Once the demo site is build I'll remove this notice and let you start playing in production.
-
-Right now there is only one potentially breaking change. It is outlined here, feel free to add any comments on what syntax you'd prefer https://github.com/thomaswelton/laravel-oauth/issues/1
-
-If you're interested in using a new OAuth package for Laravel 4 please "watch" or "star" this repo above.
-
 ## Installation
 
 Update your `composer.json` file to include this package as a dependency
@@ -39,10 +29,59 @@ Copy the config file into your project by running
 php artisan config:publish thomaswelton/laravel-oauth
 ```
 
-## Migrations
+## Usage
 
-Optionally if using OAuth for user login you'll need to run the migration
+### Consumer
+
+Get an object of the [service](https://github.com/Lusitanian/PHPoAuthLib/tree/master/src/OAuth/OAuth2/Service) class
+
+```
+$facebook = OAuth::consumer('facebook');
+```
+
+Make an API request
+
+```
+$facebook = OAuth::consumer('facebook');
+$response = $facebook->request('/me');
+```
+
+### Authorization
+
+Get an authorization URL to login with an OAuth provider and redirect back you your website
+```php
+$authUrl = OAuth::authorize('facebook');
+
+// Custom redirect
+$authUrl = OAuth::authorize('facebook')->redirect(URL::to('some/page'));
+
+// Custom scope
+$authUrl = OAuth::authorize('facebook')->withScope('publish_actions');
+```
+
+### Tokens
+
+Check for a stored token
+```php
+$hasToken = OAuth::hasToken('facebook');
+```
+
+Get a stored OAuth token for a provider
+returns - \OAuth\Common\Token\TokenInterface
+throws - TokenNotFoundException
+
+```php
+$token = OAuth::token('facebook');
+```
+
+
+
+## Login
+
+Run the migrations to create the database tables required to store OAuth user details.
+You will already need to have a `users` table present.
 
 ```
 php artisan migrate --package="thomaswelton/laravel-oauth"
 ```
+
