@@ -38,8 +38,7 @@ class OAuthController extends Controller
             if (property_exists($state, 'login')) {
                 $uid = $this->oauth->user($provider)->getUID();
 
-                $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\".ucfirst($provider);
-                $model = new $modelName();
+                $model = $this->oauth->getEloquentModel($provider);
 
                 $user = $model->where('oauth_uid', '=', $uid)->firstOrFail();
                 Auth::loginUsingId($user->user_id);
@@ -49,23 +48,17 @@ class OAuthController extends Controller
                 if (Auth::check()){
                     $uid = $this->oauth->user($provider)->getUID();
 
-                    $providerClass = ucfirst($provider);
-
                     $user = Auth::user();
+                    $model = $this->oauth->getEloquentModel($provider);
 
-                    // Check for an existing relation
-                    if(is_object($user->$providerClass)){
-                        $model = $user->$providerClass;
-                    }else{
-                        $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\".$providerClass;
-                        $model = new $modelName();
-                    }
+                    $model->where('user_id', '=', $user->id)->first();
 
+                    $model->user_id = $user->id;
                     $model->oauth_uid = $uid;
                     $model->access_token = $token->getAccessToken();
                     $model->expire_time = $token->getEndOfLife();
 
-                    $user->$provider()->save($model);
+                    $model->save();
                 }else{
                     throw new NotLoggedInException("NOT_LOGGED_IN", 1);
                 }
@@ -119,7 +112,13 @@ class OAuthController extends Controller
 
         if (Auth::check()){
             $user = Auth::user();
-            $user->$provider()->delete();
+
+            $model = $this->oauth->getEloquentModel($provider);
+
+            $relation = $model->where('user_id', '=', $user->id)->first();
+            if($relation){
+                $relation->delete();
+            }
         }else{
             $errors = new MessageBag(
                 array("oauth_error" => 'User unlink failed. User not logged in')

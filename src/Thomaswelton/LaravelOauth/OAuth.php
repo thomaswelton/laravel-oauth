@@ -67,6 +67,12 @@ class OAuth extends ServiceFactory
         return $this->getServiceFactory($provider);
     }
 
+    public function getEloquentModel($provider){
+        $providerClass = ucfirst($provider);
+        $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\".$providerClass;
+        return new $modelName();
+    }
+
     public function getAuthorizationUri($service, $scope, array $state = array())
     {
         $factory = $this->getServiceFactory($service, $scope);
