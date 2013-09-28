@@ -45,7 +45,7 @@ class OAuthController extends Controller
                 Auth::loginUsingId($user->user_id);
             }
 
-            if (property_exists($state, 'associate')) {
+            if (property_exists($state, 'link')) {
                 if (Auth::check()){
                     $uid = $this->oauth->user($provider)->getUID();
 

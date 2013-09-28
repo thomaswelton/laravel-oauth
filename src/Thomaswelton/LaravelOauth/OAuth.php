@@ -28,8 +28,8 @@ class OAuth extends ServiceFactory
         return $this->authorize($provider)->login();
     }
 
-    public function associate($provider){
-        return $this->authorize($provider)->associate();
+    public function link($provider){
+        return $this->authorize($provider)->link();
     }
 
     /**

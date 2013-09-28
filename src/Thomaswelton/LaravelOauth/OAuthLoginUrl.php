@@ -62,10 +62,10 @@ class OAuthLoginUrl
         return $this;
     }
 
-    public function associate($associate = true)
+    public function link($link = true)
     {
-        if ($associate) {
-            $this->url->query->set('associate', true);
+        if ($link) {
+            $this->url->query->set('link', true);
         }
 
         return $this;
