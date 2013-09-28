@@ -51,14 +51,18 @@ class OAuthController extends Controller
                     $user = Auth::user();
                     $model = $this->oauth->getEloquentModel($provider);
 
-                    $model->where('user_id', '=', $user->id)->first();
+                    try{
+                        $record = $model->where('user_id', '=', $user->id)->firstOrFail();
+                    }catch(ModelNotFoundException $e){
+                        $record = $model;
+                    }
 
-                    $model->user_id = $user->id;
-                    $model->oauth_uid = $uid;
-                    $model->access_token = $token->getAccessToken();
-                    $model->expire_time = $token->getEndOfLife();
+                    $record->user_id = $user->id;
+                    $record->oauth_uid = $uid;
+                    $record->access_token = $token->getAccessToken();
+                    $record->expire_time = $token->getEndOfLife();
 
-                    $model->save();
+                    $record->save();
                 }else{
                     throw new NotLoggedInException("NOT_LOGGED_IN", 1);
                 }
@@ -98,7 +102,7 @@ class OAuthController extends Controller
         $state = array(
             'redirect' => Input::get('redirect'),
             'login' => Input::get('login'),
-            'associate' => Input::get('associate')
+            'link' => Input::get('link')
         );
 
         $authUrl = $this->oauth->getAuthorizationUri($provider, $scope, $state);
