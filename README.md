@@ -104,4 +104,30 @@ If a user has a linked account they can login to your app by clicking a URL like
 <a href="<?= OAuth::login($provider); ?>">Link with <?= Str::studly($provider) ?></a>
 ```
 
+### Eloquent Relations
+
+If you have linked users you may want to add Eloquent relations to your User model in order to simplify access to their oauth tokens or UIDs.
+
+Update you user model so it looks like this
+
+```php
+class User extends Eloquent{
+
+    public function facebook()
+    {
+        return $this->hasOne('Thomaswelton\LaravelOauth\Eloquent\Facebook');
+    }
+
+}
+```
+
+The above is an example for the Facebook OAuth provider, but you can add relations for all OAuth providers listed here https://github.com/thomaswelton/laravel-oauth/tree/master/src/Thomaswelton/LaravelOauth/Eloquent
+
+Once you have setup your relation you can get a users OAuth UID like this
+
+```php
+$user = Auth::user();
+$uid = $user->facebook->oauth_uid;
+```
+
 
