@@ -85,3 +85,23 @@ You will already need to have a `users` table present.
 php artisan migrate --package="thomaswelton/laravel-oauth"
 ```
 
+### Link
+
+If a user is already logged in to your application you can prompt them to link their account to an oauth provider with a URL like this.
+
+```
+<a href="<?= OAuth::link($provider); ?>">Link with <?= Str::studly($provider) ?></a>
+```
+
+When a user clicks the link they will be promoted for permissions from the OAuth provider, and redirected back to your site and your database updated with a record of the link.
+You can also specify a redirect, and required scope just like the `OAuth::authorize()` method
+
+### Login
+
+If a user has a linked account they can login to your app by clicking a URL like this. You can also specify a custom redirect here too.
+
+```
+<a href="<?= OAuth::login($provider); ?>">Link with <?= Str::studly($provider) ?></a>
+```
+
+
