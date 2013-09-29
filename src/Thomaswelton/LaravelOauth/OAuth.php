@@ -107,6 +107,9 @@ class OAuth extends ServiceFactory
         $scopes 	 = (!is_null($scope)) ? array_map("trim", explode(',', $scope)) : array_values( $this->getScopes($service) );
 
         $storage 	 = $this->getStorage();
+        
+        $httpClient = new \OAuth\Common\Http\Client\CurlClient();
+        $this->setHttpClient($httpClient);
 
         if ($this->isOAuth2($service)) {
             return $this->createService($service, $credentials, $storage, $scopes);
