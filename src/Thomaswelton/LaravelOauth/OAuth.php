@@ -4,11 +4,13 @@ use \Config;
 use \Input;
 use \Str;
 use \URL;
+use \Auth;
 use \Session;
 
 use OAuth\ServiceFactory;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Http\Exception\TokenResponseException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OAuth extends ServiceFactory
 {
@@ -18,18 +20,61 @@ class OAuth extends ServiceFactory
      * @param  string        $redirect url to redirect to after login
      * @return OAuthLoginUrl
      */
-    public function authorize($provider)
+    public function getAuthorizeUrl($provider)
     {
         return new OAuthLoginUrl($provider);
     }
 
-    public function login($provider)
+    public function getLoginUrl($provider)
     {
-        return $this->authorize($provider)->login();
+        return $this->getAuthorizeUrl($provider)->login();
     }
 
-    public function link($provider){
-        return $this->authorize($provider)->link();
+    public function getLinkUrl($provider){
+        return $this->getAuthorizeUrl($provider)->link();
+    }
+
+    public function link($provider, $user = null)
+    {
+        $uid = $this->user($provider)->getUID();
+
+        if(is_null($user)){
+            if (Auth::check()){
+                $user = Auth::user();
+            }else{
+                throw new NotLoggedInException("NOT_LOGGED_IN", 1);
+            }
+        }
+
+        $model = $this->getEloquentModel($provider);
+
+        try{
+            $record = $model->where('user_id', '=', $user->id)->firstOrFail();
+        }catch(ModelNotFoundException $e){
+            $record = $model;
+        }
+
+        $token = $this->token($provider);
+
+        $record->user_id = $user->id;
+        $record->oauth_uid = $uid;
+        $record->access_token = $token->getAccessToken();
+        $record->expire_time = $token->getEndOfLife();
+
+        $record->save();
+    }
+
+    public function login($provider){
+        $uid = $this->user($provider)->getUID();
+
+        $model = $this->getEloquentModel($provider);
+
+        try{
+            $user = $model->where('oauth_uid', '=', $uid)->firstOrFail();
+            Auth::loginUsingId($user->user_id);
+        }catch(ModelNotFoundException $e){
+            return false;
+        }
     }
 
     /**

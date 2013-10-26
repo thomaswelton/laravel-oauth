@@ -50,13 +50,13 @@ $response = $facebook->request('/me');
 
 Get an authorization URL to login with an OAuth provider and redirect back you your website
 ```php
-$authUrl = OAuth::authorize('facebook');
+$authUrl = OAuth::getAuthorizeUrl('facebook');
 
 // Custom redirect
-$authUrl = OAuth::authorize('facebook')->redirect(URL::to('some/page'));
+$authUrl = OAuth::getAuthorizeUrl('facebook')->redirect(URL::to('some/page'));
 
 // Custom scope
-$authUrl = OAuth::authorize('facebook')->withScope('publish_actions');
+$authUrl = OAuth::getAuthorizeUrl('facebook')->withScope('publish_actions');
 ```
 
 ### Tokens

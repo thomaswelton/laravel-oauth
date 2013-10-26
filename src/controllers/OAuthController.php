@@ -36,33 +36,14 @@ class OAuthController extends Controller
             $token = $this->oauth->requestAccessToken($provider);
 
             if (property_exists($state, 'login')) {
-                $uid = $this->oauth->user($provider)->getUID();
-
-                $model = $this->oauth->getEloquentModel($provider);
-
-                $user = $model->where('oauth_uid', '=', $uid)->firstOrFail();
-                Auth::loginUsingId($user->user_id);
+                // Login user based on provider token
+                $this->oauth->login($provider);
             }
 
             if (property_exists($state, 'link')) {
                 if (Auth::check()){
-                    $uid = $this->oauth->user($provider)->getUID();
-
-                    $user = Auth::user();
-                    $model = $this->oauth->getEloquentModel($provider);
-
-                    try{
-                        $record = $model->where('user_id', '=', $user->id)->firstOrFail();
-                    }catch(ModelNotFoundException $e){
-                        $record = $model;
-                    }
-
-                    $record->user_id = $user->id;
-                    $record->oauth_uid = $uid;
-                    $record->access_token = $token->getAccessToken();
-                    $record->expire_time = $token->getEndOfLife();
-
-                    $record->save();
+                    //Link logged in user to provider
+                    $this->oauth->link($provider);
                 }else{
                     throw new NotLoggedInException("NOT_LOGGED_IN", 1);
                 }
