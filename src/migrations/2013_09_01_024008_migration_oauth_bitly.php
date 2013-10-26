@@ -3,7 +3,7 @@
 use Thomaswelton\LaravelOauth\AbstractMigration;
 use Illuminate\Database\Migrations\Migration;
 
-class MigrationOauthHeroku extends AbstractMigration {
+class MigrationOauthBitly extends AbstractMigration {
 
-    public $provider = 'heroku';
+    public $provider = 'bitly';
 }
