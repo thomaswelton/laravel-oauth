@@ -17,7 +17,7 @@ If you're interested in using a new OAuth package for Laravel 4 please "watch" o
 
 Update your `composer.json` file to include this package as a dependency
 ```json
-"thomaswelton/laravel-oauth": "dev-master"
+"thomaswelton/laravel-oauth": "0.0.1"
 ```
 
 Register the OAuth service provider by adding it to the providers array in the `app/config/app.php` file.
