@@ -7,6 +7,7 @@ use \URL;
 use \Auth;
 use \Session;
 
+use Carbon\Carbon;
 use OAuth\ServiceFactory;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Http\Exception\TokenResponseException;
@@ -95,6 +96,21 @@ class OAuth extends ServiceFactory
         $serviceName = $service->service();
 
         return $service->getStorage()->hasAccessToken($serviceName);
+    }
+
+    public function hasExpired($provider)
+    {
+        $token_eol = OAuth::token($provider)->getEndOfLife();
+
+        if($token_eol < 0){
+            // Non expiring tokens
+            return false;
+        }
+
+        $carbon_eol = Carbon::createFromTimestamp($token_eol);
+        $carbon_now = Carbon::now();
+
+        return ($carbon_eol->lt($carbon_now));
     }
 
     public function user($provider)
