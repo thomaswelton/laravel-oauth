@@ -12,7 +12,7 @@ class BitBucket extends AbstractUser
     // Doesn't return a user ID and can change username
     public function getUID()
     {
-        return null;
+        throw new \Exception("Login with BitBucket not supported", 1);
     }
 
 }
