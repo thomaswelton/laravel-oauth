@@ -19,7 +19,7 @@
     },
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.0.x",
+        "illuminate/support": "4.x",
         "nesbot/Carbon": "*",
         "lusitanian/oauth": "~0.2",
         "jwage/purl": "0.0.2"
