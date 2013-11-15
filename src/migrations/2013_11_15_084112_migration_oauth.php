@@ -17,7 +17,7 @@ class MigrationOauth extends Migration {
             $table->text('oauth_uid');
             $table->text('access_token');
             $table->integer('expire_time');
-            $table->integer('provider');
+            $table->text('provider');
 
             $table->timestamps();
 
