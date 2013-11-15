@@ -33,7 +33,7 @@ class OAuthController extends Controller
                 $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\Oauth";
                 $model = new $modelName();
 
-                $user = $model->where('oauth_uid', '=', $uid)->where->('provider', '=', $provider)->firstOrFail();
+                $user = $model->where('oauth_uid', '=', $uid)->where('provider', '=', $provider)->firstOrFail();
                 Auth::loginUsingId($user->user_id);
             }
 
