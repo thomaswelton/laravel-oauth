@@ -30,10 +30,10 @@ class OAuthController extends Controller
             if (property_exists($state, 'login')) {
                 $uid = $this->oauth->user($provider)->getUID();
 
-                $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\".ucfirst($provider);
+                $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\Oauth";
                 $model = new $modelName();
 
-                $user = $model->where('oauth_uid', '=', $uid)->firstOrFail();
+                $user = $model->where('oauth_uid', '=', $uid)->where('provider', '=', $provider)->firstOrFail();
                 Auth::loginUsingId($user->user_id);
             }
 
@@ -49,14 +49,14 @@ class OAuthController extends Controller
                     if(is_object($user->$providerClass)){
                         $model = $user->$providerClass;
                     }else{
-                        $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\".$providerClass;
+                        $modelName = "Thomaswelton\\LaravelOauth\\Eloquent\\Oauth";
                         $model = new $modelName();
                     }
 
                     $model->oauth_uid = $uid;
                     $model->access_token = $token->getAccessToken();
                     $model->expire_time = $token->getEndOfLife();
-
+                    $model->provider = $provider;
                     $user->$provider()->save($model);
                 }else{
                     throw new NotLoggedInException("NOT_LOGGED_IN", 1);
